@@ -5,32 +5,26 @@ using UnityEngine;
 
 public class Wave : MonoBehaviour
 {
+    // Wave Property
+    [Serializable]
+    public struct Octave
+    {
+        public Vector2 speed;
+        public Vector2 scale;
+        public float height;
+        public bool alternate;
+    }
+
     //Public Properties
-    public int Dimension = 10;
+    public int Dimension = 10;      // Size of the sea
     public float UVScale = 2f;
-    public Octave[] Octaves;
+    public Octave[] Octaves;        // Waves
 
     //Mesh
     protected MeshFilter MeshFilter;
     protected Mesh Mesh;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //Mesh Setup
-        Mesh = new Mesh();
-        Mesh.name = gameObject.name;
-
-        Mesh.vertices = GenerateVerts();
-        Mesh.triangles = GenerateTries();
-        Mesh.uv = GenerateUVs();
-        Mesh.RecalculateNormals();
-        Mesh.RecalculateBounds();
-
-        MeshFilter = gameObject.AddComponent<MeshFilter>();
-        MeshFilter.mesh = Mesh;
-    }
-
+    // Return the height(y) of a position on the sea
     public float GetHeight(Vector3 position)
     {
         //scale factor and position in local space
@@ -120,6 +114,7 @@ public class Wave : MonoBehaviour
         return uvs;
     }
 
+    // Return corresponding mesh point given x,z
     private int index(int x, int z)
     {
         return x * (Dimension + 1) + z;
@@ -128,6 +123,24 @@ public class Wave : MonoBehaviour
     private int index(float x, float z)
     {
         return index((int)x, (int)z);
+    }
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //Mesh Setup
+        Mesh = new Mesh();
+        Mesh.name = gameObject.name;
+
+        Mesh.vertices = GenerateVerts();
+        Mesh.triangles = GenerateTries();
+        Mesh.uv = GenerateUVs();
+        Mesh.RecalculateNormals();
+        Mesh.RecalculateBounds();
+
+        MeshFilter = gameObject.AddComponent<MeshFilter>();
+        MeshFilter.mesh = Mesh;
     }
 
     // Update is called once per frame
@@ -160,12 +173,5 @@ public class Wave : MonoBehaviour
         Mesh.RecalculateNormals();
     }
 
-    [Serializable]
-    public struct Octave
-    {
-        public Vector2 speed;
-        public Vector2 scale;
-        public float height;
-        public bool alternate;
-    }
 }
+
